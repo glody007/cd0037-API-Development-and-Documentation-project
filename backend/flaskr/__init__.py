@@ -23,7 +23,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
 
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/": {"origins": "*"}})
 
     # CORS Headers
     @app.after_request
@@ -110,7 +110,7 @@ def create_app(test_config=None):
     Endpoint to POST a new question,
     which will require the question and answer text,
     category, and difficulty score.
-    And endpoint to get questions based on a search term.
+    And to get questions based on a search term.
     It should return any questions for whom the search term
     is a substring of the question.
     """
@@ -166,6 +166,24 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that
     category to be shown.
     """
+    @app.route("/categories/<int:categorie_id>/questions")
+    def retrieve_questions_by_category(categorie_id):
+        category = Category.query.filter(Category.id == categorie_id).one_or_none()
+        if category is None:
+            abort(404)
+        else:
+            selection = Question.query.order_by(Question.id).filter(
+                Question.category == categorie_id
+            )
+            current_questions = paginate_questions(request, selection)
+
+            return jsonify(
+                {
+                    "success": True,
+                    "questions": current_questions,
+                    "total_questions": len(selection.all()),
+                }
+            )
 
     """
     @TODO:
