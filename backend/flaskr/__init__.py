@@ -75,7 +75,7 @@ def create_app(test_config=None):
                 "questions": current_questions,
                 "total_questions": len(Question.query.all()),
                 "categories": categories,
-                "current_category": categories[1]
+                "current_category": 1
             }
         )
 
@@ -181,16 +181,47 @@ def create_app(test_config=None):
             )
 
     """
-    @TODO:
-    Create a POST endpoint to get questions to play the quiz.
+    POST endpoint to get questions to play the quiz.
     This endpoint should take category and previous question parameters
     and return a random questions within the given category,
     if provided, and that is not one of the previous questions.
-
-    TEST: In the "Play" tab, after a user selects "All" or a category,
-    one question at a time is displayed, the user is allowed to answer
-    and shown whether they were correct or not.
     """
+    @app.route("/quizzes", methods=["POST"])
+    def quizzes():
+        body = request.get_json()
+
+        previous_questions = body.get("previous_questions", [])
+        quiz_category = body.get("quiz_category", None)
+        
+        try:
+            available_questions = Question.query.order_by(Question.id).filter(
+                ~Question.id.in_(previous_questions),
+            ).all()
+
+            questions = available_questions
+            if quiz_category is not None and quiz_category["id"] != 0:
+                questions = [question for question in available_questions 
+                            if question.category == int(quiz_category["id"])]
+
+            if len(questions) == 0:
+                return jsonify(
+                    {
+                        "success": True,
+                        "question": None
+                    }
+                )
+
+            random_question = random.choice(questions)
+
+            return jsonify(
+                {
+                    "success": True,
+                    "question": random_question.format()
+                }
+            )
+
+        except:
+            abort(422)
 
     """
     Error handlers for all expected errors
