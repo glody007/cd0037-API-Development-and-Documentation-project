@@ -115,6 +115,7 @@ The API will return three error types when requests fail:
 - General:
     - Creates a new question using the submitted answer, category, difficulty and question. Returns the id of the created question, success value, total questions, and question list based on current page number to update the frontend. 
     - Get questions based on a search term. It should return any questions for whom the search term is a substring of the question.
+    - Request Arguments: `searchterm`, `answer`, `category`, `difficulty`, `question`.
 - `curl http://127.0.0.1:5000/questions?page=3 -X POST -H "Content-Type: application/json" -d '{"answer":"Apollo 13", "category":"5", "difficulty":"4", "question":"What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"}'`
 ```
 {
@@ -333,6 +334,25 @@ The API will return three error types when requests fail:
   ],
   "success": true,
   "total_questions": 3
+}
+```
+#### POST /questions
+- General:
+    - Get questions to play the quiz.
+    This endpoint should take category and previous question parameters
+    and return a random questions within the given category,
+    if provided, and that is not one of the previous questions.
+    - Request Arguments: `previous_questions`, `quiz_category`.
+- `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"previous_questions":"[]", "quiz_category":"5"}'`
+{
+  "question": {
+    "answer": "Apollo 13", 
+    "category": 5, 
+    "difficulty": 4, 
+    "id": 2, 
+    "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+  }
+  "success": true,
 }
 ```
 
