@@ -39,7 +39,6 @@ def create_app(test_config=None):
     """
     Handle GET requests
     for all available categories.
-
     """
     @app.route("/categories")
     def retrieve_categories():
@@ -88,6 +87,7 @@ def create_app(test_config=None):
     This removal will persist in the database and when you refresh the page.
     """
 
+
     """
     @TODO:
     Create an endpoint to POST a new question,
@@ -132,10 +132,27 @@ def create_app(test_config=None):
     """
 
     """
-    @TODO:
     Create error handlers for all expected errors
     including 404 and 422.
     """
+    
+    @app.errorhandler(404)
+    def not_found(error):
+        return (
+            jsonify({"success": False, "error": 404, "message": "resource not found"}),
+            404,
+        )
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return (
+            jsonify({"success": False, "error": 422, "message": "unprocessable"}),
+            422,
+        )
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({"success": False, "error": 400, "message": "bad request"}), 400
 
     return app
 
