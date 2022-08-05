@@ -118,10 +118,10 @@ def create_app(test_config=None):
     def create_question():
         body = request.get_json()
 
-        new_question = body.get("question", None)
-        new_answer = body.get("answer", None)
-        new_category = body.get("category", None)
-        new_difficulty = body.get("difficulty", None)
+        new_question = body.get("question", "")
+        new_answer = body.get("answer", "")
+        new_category = body.get("category", "")
+        new_difficulty = body.get("difficulty", "")
         search = body.get("searchTerm", None)
 
         try:
@@ -139,6 +139,11 @@ def create_app(test_config=None):
                     }
                 )
             else:
+
+                if (new_answer == "" or new_category == "" or
+                    new_difficulty == "" or new_question == ""):
+                    abort(422)
+
                 question = Question(question=new_question, answer=new_answer, 
                                     category=new_category, difficulty=new_difficulty)
                 question.insert()
