@@ -99,6 +99,11 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 422)
 
+    def test_retrieve_categories(self):
+        res = self.client().get("/categories")
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data["total_categories"])
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
