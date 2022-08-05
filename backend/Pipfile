@@ -22,6 +22,7 @@ sqlalchemy = "==1.4.39"
 werkzeug = "==2.0.0"
 wtforms = "==3.0.1"
 psycopg2-binary = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
